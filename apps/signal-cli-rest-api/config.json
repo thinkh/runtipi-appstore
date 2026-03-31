@@ -1,0 +1,26 @@
+{
+  "name": "Signal REST API",
+  "id": "signal-cli-rest-api",
+  "available": true,
+  "short_desc": "A REST API wrapper for the Signal messenger via signal-cli.",
+  "author": "bbernhard",
+  "port": 8880,
+  "categories": [
+    "social",
+    "utilities"
+  ],
+  "description": "A dockerized REST API around signal-cli that lets you send and receive Signal messages programmatically.",
+  "tipi_version": 1,
+  "version": "0.98",
+  "source": "https://github.com/bbernhard/signal-cli-rest-api",
+  "exposable": false,
+  "no_gui": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1743437520000,
+  "updated_at": 1743437520000,
+  "dynamic_config": true,
+  "form_fields": []
+}

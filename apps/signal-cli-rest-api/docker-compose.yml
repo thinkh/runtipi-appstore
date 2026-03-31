@@ -1,0 +1,14 @@
+services:
+  signal-cli-rest-api:
+    image: 'bbernhard/signal-cli-rest-api:0.98'
+    environment:
+      - MODE=native
+    volumes:
+      - ${APP_DATA_DIR}/data/signal-cli:/home/.local/share/signal-cli
+    x-runtipi:
+      is_main: true
+      internal_port: 8080
+
+x-runtipi:
+  schema_version: 2
+  overrides: []

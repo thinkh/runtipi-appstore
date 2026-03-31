@@ -10,7 +10,7 @@
     "utilities"
   ],
   "description": "A dockerized REST API around signal-cli that lets you send and receive Signal messages programmatically.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "0.98",
   "source": "https://github.com/bbernhard/signal-cli-rest-api",
   "exposable": false,
@@ -20,7 +20,142 @@
     "amd64"
   ],
   "created_at": 1743437520000,
-  "updated_at": 1743437520000,
+  "updated_at": 1743523920000,
   "dynamic_config": true,
-  "form_fields": []
+  "form_fields": [
+    {
+      "type": "text",
+      "label": "Execution mode",
+      "hint": "normal: new JVM per request (slow). native: GraalVM binary, low latency. json-rpc: persistent JVM daemon (fast, more RAM). json-rpc-native: native daemon (fastest, normal RAM).",
+      "required": true,
+      "default": "native",
+      "env_variable": "MODE",
+      "options": [
+        { "label": "normal", "value": "normal" },
+        { "label": "native", "value": "native" },
+        { "label": "json-rpc", "value": "json-rpc" },
+        { "label": "json-rpc-native", "value": "json-rpc-native" }
+      ]
+    },
+    {
+      "type": "text",
+      "label": "Auto-receive schedule (cron)",
+      "hint": "Only needed in normal/native mode. Calls /receive on a cron schedule to fetch incoming messages. Example: 0 22 * * * (daily at 10pm). Leave empty to disable.",
+      "placeholder": "0 22 * * *",
+      "required": false,
+      "env_variable": "AUTO_RECEIVE_SCHEDULE"
+    },
+    {
+      "type": "text",
+      "label": "Log level",
+      "required": false,
+      "default": "info",
+      "env_variable": "LOG_LEVEL",
+      "options": [
+        { "label": "debug", "value": "debug" },
+        { "label": "info", "value": "info" },
+        { "label": "warn", "value": "warn" },
+        { "label": "error", "value": "error" }
+      ]
+    },
+    {
+      "type": "text",
+      "label": "Default text mode",
+      "hint": "Default text mode for outgoing messages when text_mode is not set in the send payload.",
+      "required": false,
+      "default": "normal",
+      "env_variable": "DEFAULT_SIGNAL_TEXT_MODE",
+      "options": [
+        { "label": "normal", "value": "normal" },
+        { "label": "styled", "value": "styled" }
+      ]
+    },
+    {
+      "type": "text",
+      "label": "Swagger host",
+      "hint": "Overrides the host shown in Swagger UI interactive examples. Useful when running behind a reverse proxy.",
+      "placeholder": "signal.example.com",
+      "required": false,
+      "env_variable": "SWAGGER_HOST"
+    },
+    {
+      "type": "boolean",
+      "label": "Swagger: prefer HTTPS scheme",
+      "hint": "When enabled, Swagger UI will use HTTPS as the preferred scheme for interactive examples.",
+      "required": false,
+      "default": false,
+      "env_variable": "SWAGGER_USE_HTTPS_AS_PREFERRED_SCHEME"
+    },
+    {
+      "type": "number",
+      "label": "User ID (UID)",
+      "hint": "UID of the signal-api user inside the container.",
+      "placeholder": "1000",
+      "required": false,
+      "default": 1000,
+      "env_variable": "SIGNAL_CLI_UID"
+    },
+    {
+      "type": "number",
+      "label": "Group ID (GID)",
+      "hint": "GID of the signal-api group inside the container.",
+      "placeholder": "1000",
+      "required": false,
+      "default": 1000,
+      "env_variable": "SIGNAL_CLI_GID"
+    },
+    {
+      "type": "boolean",
+      "label": "Chown data directory on startup",
+      "hint": "When disabled, skips the chown call on the data directory at startup (speeds up container start if the directory is large).",
+      "required": false,
+      "default": true,
+      "env_variable": "SIGNAL_CLI_CHOWN_ON_STARTUP"
+    },
+    {
+      "type": "text",
+      "label": "json-rpc: trust new identities",
+      "hint": "How to handle new or changed Signal identities in json-rpc mode.",
+      "required": false,
+      "default": "on-first-use",
+      "env_variable": "JSON_RPC_TRUST_NEW_IDENTITIES",
+      "options": [
+        { "label": "on-first-use", "value": "on-first-use" },
+        { "label": "always", "value": "always" },
+        { "label": "never", "value": "never" }
+      ]
+    },
+    {
+      "type": "boolean",
+      "label": "json-rpc: ignore attachments",
+      "hint": "When enabled, attachments are not automatically downloaded in json-rpc mode.",
+      "required": false,
+      "default": false,
+      "env_variable": "JSON_RPC_IGNORE_ATTACHMENTS"
+    },
+    {
+      "type": "boolean",
+      "label": "json-rpc: ignore stories",
+      "hint": "When enabled, stories are not automatically downloaded in json-rpc mode.",
+      "required": false,
+      "default": false,
+      "env_variable": "JSON_RPC_IGNORE_STORIES"
+    },
+    {
+      "type": "boolean",
+      "label": "json-rpc: ignore avatars",
+      "hint": "When enabled, avatars are not automatically downloaded in json-rpc mode.",
+      "required": false,
+      "default": false,
+      "env_variable": "JSON_RPC_IGNORE_AVATARS"
+    },
+    {
+      "type": "boolean",
+      "label": "json-rpc: ignore stickers",
+      "hint": "When enabled, sticker packs are not automatically downloaded in json-rpc mode.",
+      "required": false,
+      "default": false,
+      "env_variable": "JSON_RPC_IGNORE_STICKERS"
+    }
+  ]
 }

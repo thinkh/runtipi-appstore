@@ -1,0 +1,55 @@
+{
+  "name": "OpenCloud",
+  "id": "opencloud",
+  "available": true,
+  "short_desc": "Self-hosted file sync and share platform, the community fork of ownCloud Infinite Scale.",
+  "author": "OpenCloud GmbH",
+  "port": 9200,
+  "categories": [
+    "data"
+  ],
+  "description": "OpenCloud is a modern file sync and share platform written in Go. It stores files directly on disk without a database and comes with a built-in identity provider, WebDAV, sharing, spaces and desktop/mobile clients.",
+  "tipi_version": 1,
+  "version": "9.1.1",
+  "source": "https://github.com/opencloud-eu/opencloud",
+  "website": "https://opencloud.eu",
+  "exposable": true,
+  "supported_architectures": [
+    "arm64",
+    "amd64"
+  ],
+  "created_at": 1795382042686,
+  "updated_at": 1795382042686,
+  "dynamic_config": true,
+  "min_tipi_version": "4.5.0",
+  "form_fields": [
+    {
+      "type": "password",
+      "label": "Admin password",
+      "hint": "Password for the 'admin' user. Only used on the first start; change it later in OpenCloud itself.",
+      "min": 8,
+      "max": 64,
+      "required": true,
+      "env_variable": "OPENCLOUD_ADMIN_PASSWORD"
+    },
+    {
+      "type": "boolean",
+      "label": "Skip TLS certificate checks",
+      "hint": "Keep enabled when using the local domain (self-signed certificate). Disable when exposing on a public domain with a Let's Encrypt certificate.",
+      "default": true,
+      "required": false,
+      "env_variable": "OPENCLOUD_INSECURE"
+    },
+    {
+      "type": "text",
+      "label": "Default language",
+      "hint": "Two-letter language code for the web UI and emails, e.g. en or de.",
+      "placeholder": "en",
+      "default": "en",
+      "regex": "^[a-z]{2}$",
+      "pattern_error": "Use a two-letter language code, e.g. en or de.",
+      "required": false,
+      "env_variable": "OPENCLOUD_DEFAULT_LANGUAGE"
+    }
+  ]
+}

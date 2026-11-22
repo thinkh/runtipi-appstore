@@ -2,14 +2,15 @@
 
 [OpenCloud](https://opencloud.eu) is a modern, self-hosted file sync and share platform. It started as a fork of ownCloud Infinite Scale and is written in Go. Files are stored directly on disk without a database. It includes a built-in identity provider, WebDAV, sharing, spaces, and desktop and mobile clients.
 
-## Before you install
+## How to reach it
 
-OpenCloud signs users in with OpenID Connect. The browser only allows that over **HTTPS**, and only on the exact URL OpenCloud was configured with. Plain `http://<ip>:9200` does **not** work. Pick one of these options in the install dialog:
+OpenCloud signs users in with OpenID Connect, which requires **HTTPS** on the exact URL OpenCloud was started with. The app picks the right setup automatically:
 
-- **Local network:** enable *Expose on local network* and leave *open port* unchecked. OpenCloud is then served at `https://opencloud-<store>.tipi.local` (or your custom local subdomain) with a self-signed certificate. Keep **Skip TLS certificate checks** enabled.
-- **Internet:** enable *Expose app* with a domain that points to your Runtipi host. Traefik gets a Let's Encrypt certificate. You can turn **Skip TLS certificate checks** off.
+- **Default (no domain):** OpenCloud serves HTTPS itself with a self-signed certificate at `https://<runtipi-ip>:9200`. Note the `https://`. Accept the browser's certificate warning once. The *Open* button in Runtipi links to `http://`, so change it to `https://` by hand.
+- **Local network domain:** enable *Expose on local network* and leave *open port* unchecked. OpenCloud is served at `https://<subdomain>.tipi.local` through Traefik.
+- **Public domain:** enable *Expose app* with a domain that points to your Runtipi host. Traefik gets a Let's Encrypt certificate, and you can turn **Skip TLS certificate checks** off.
 
-The URL is baked into OpenCloud's configuration on the first start. If you change the domain later, you need to reinstall the app (or edit `opencloud.yaml` by hand).
+Use only the URL that matches the mode you picked. Browser logins on other URLs fail.
 
 ## First login
 

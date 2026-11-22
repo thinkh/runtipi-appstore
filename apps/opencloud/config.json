@@ -9,7 +9,7 @@
     "data"
   ],
   "description": "OpenCloud is a modern file sync and share platform written in Go. It stores files directly on disk without a database and comes with a built-in identity provider, WebDAV, sharing, spaces and desktop/mobile clients.",
-  "tipi_version": 1,
+  "tipi_version": 2,
   "version": "9.1.1",
   "source": "https://github.com/opencloud-eu/opencloud",
   "website": "https://opencloud.eu",
@@ -19,7 +19,7 @@
     "amd64"
   ],
   "created_at": 1795382042686,
-  "updated_at": 1795382042686,
+  "updated_at": 1795385698333,
   "dynamic_config": true,
   "min_tipi_version": "4.5.0",
   "form_fields": [
@@ -35,7 +35,7 @@
     {
       "type": "boolean",
       "label": "Skip TLS certificate checks",
-      "hint": "Keep enabled when using the local domain (self-signed certificate). Disable when exposing on a public domain with a Let's Encrypt certificate.",
+      "hint": "Keep enabled unless OpenCloud is exposed on a public domain with a Let's Encrypt certificate (needed for self-signed certificates).",
       "default": true,
       "required": false,
       "env_variable": "OPENCLOUD_INSECURE"

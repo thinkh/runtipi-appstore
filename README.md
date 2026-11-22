@@ -8,7 +8,7 @@ This repository serves as a template for creating your own custom app store for 
 
   - Each app has its own folder (e.g., `whoami/`) with the following structure:
     - `config.json`: App configuration file
-    - `docker-compose.json`: Docker setup for the app
+    - `docker-compose.yml`: Docker setup for the app (native compose file with `x-runtipi` metadata)
     - `metadata/`: Contains app visuals and descriptions
       - `description.md`: Markdown description of the app
       - `logo.jpg`: App logo image

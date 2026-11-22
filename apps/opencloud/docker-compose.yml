@@ -16,23 +16,37 @@ services:
   opencloud:
     image: opencloudeu/opencloud:9.1.1
     user: '1000:1000'
-    # `opencloud init` writes /etc/opencloud/opencloud.yaml with random secrets on the
-    # first start and fails on every later start because the file exists (same as
-    # https://github.com/opencloud-eu/opencloud-compose).
     entrypoint:
       - /bin/sh
       - -c
-      - opencloud init || true; exec opencloud server
+      - |
+        # OpenCloud's identity provider only accepts an https:// URL.
+        # With a (local or public) domain, Traefik terminates TLS and OpenCloud
+        # speaks plain HTTP behind it. Without a domain (Runtipi's default,
+        # APP_PROTOCOL=http), OpenCloud serves HTTPS itself on its port with an
+        # auto-generated self-signed certificate.
+        if [ "$$APP_PROTOCOL" = "https" ]; then
+          export PROXY_TLS=false
+        else
+          export PROXY_TLS=true
+        fi
+        # Must be the URL the browser uses: it is the OIDC issuer.
+        export OC_URL="https://$$APP_DOMAIN"
+        echo "OpenCloud URL: $$OC_URL (PROXY_TLS=$$PROXY_TLS)"
+        # Writes opencloud.yaml with random secrets on the first start and fails
+        # on every later start because the file exists (same as opencloud-compose).
+        opencloud init || true
+        exec opencloud server
     depends_on:
       opencloud-init:
         condition: service_completed_successfully
     environment:
-      # Must be the URL the browser uses: it is the OIDC issuer.
-      OC_URL: ${APP_PROTOCOL}://${APP_DOMAIN}
-      # Traefik terminates TLS, OpenCloud itself speaks plain HTTP.
-      PROXY_TLS: 'false'
+      # Read by the entrypoint to derive OC_URL and PROXY_TLS.
+      APP_PROTOCOL: ${APP_PROTOCOL}
+      APP_DOMAIN: ${APP_DOMAIN}
       PROXY_HTTP_ADDR: 0.0.0.0:9200
-      # Skip certificate checks for the self-signed *.tipi.local certificate.
+      # Skip certificate checks for self-signed certificates (*.tipi.local or
+      # OpenCloud's own when no domain is set).
       OC_INSECURE: ${OPENCLOUD_INSECURE:-true}
       # Only read on the very first start; later changes are ignored.
       IDM_ADMIN_PASSWORD: ${OPENCLOUD_ADMIN_PASSWORD}

@@ -13,10 +13,10 @@
     {
       "customType": "regex",
       "fileMatch": [
-        "^.*docker-compose\\.json$"
+        "^.*docker-compose\\.ya?ml$"
       ],
       "matchStrings": [
-        "\"image\": \"(?<depName>.*?):(?<currentValue>.*?)\","
+        "image: ['\"]?(?<depName>[^:'\"\\s]+):(?<currentValue>[^'\"\\s]+)['\"]?"
       ],
       "datasourceTemplate": "docker"
     }

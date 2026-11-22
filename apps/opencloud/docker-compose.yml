@@ -1,0 +1,56 @@
+services:
+  # Bind mounts are created as root, but OpenCloud runs as 1000:1000.
+  # Hand the two top-level directories over before the server starts.
+  opencloud-init:
+    image: opencloudeu/opencloud:9.1.1
+    user: '0:0'
+    entrypoint:
+      - /bin/sh
+      - -c
+      - chown 1000:1000 /etc/opencloud /var/lib/opencloud
+    volumes:
+      - ${APP_DATA_DIR}/data/config:/etc/opencloud
+      - ${APP_DATA_DIR}/data/data:/var/lib/opencloud
+    restart: 'no'
+
+  opencloud:
+    image: opencloudeu/opencloud:9.1.1
+    user: '1000:1000'
+    # `opencloud init` writes /etc/opencloud/opencloud.yaml with random secrets on the
+    # first start and fails on every later start because the file exists (same as
+    # https://github.com/opencloud-eu/opencloud-compose).
+    entrypoint:
+      - /bin/sh
+      - -c
+      - opencloud init || true; exec opencloud server
+    depends_on:
+      opencloud-init:
+        condition: service_completed_successfully
+    environment:
+      # Must be the URL the browser uses: it is the OIDC issuer.
+      OC_URL: ${APP_PROTOCOL}://${APP_DOMAIN}
+      # Traefik terminates TLS, OpenCloud itself speaks plain HTTP.
+      PROXY_TLS: 'false'
+      PROXY_HTTP_ADDR: 0.0.0.0:9200
+      # Skip certificate checks for the self-signed *.tipi.local certificate.
+      OC_INSECURE: ${OPENCLOUD_INSECURE:-true}
+      # Only read on the very first start; later changes are ignored.
+      IDM_ADMIN_PASSWORD: ${OPENCLOUD_ADMIN_PASSWORD}
+      IDM_CREATE_DEMO_USERS: 'false'
+      PROXY_ENABLE_BASIC_AUTH: 'false'
+      OC_DEFAULT_LANGUAGE: ${OPENCLOUD_DEFAULT_LANGUAGE:-en}
+    # OpenCloud's own services fetch the OIDC config from OC_URL. Route the app's
+    # hostname to the host's Traefik so this works without DNS for *.tipi.local
+    # and without NAT loopback on the router.
+    extra_hosts:
+      - ${APP_HOST}:host-gateway
+    volumes:
+      - ${APP_DATA_DIR}/data/config:/etc/opencloud
+      - ${APP_DATA_DIR}/data/data:/var/lib/opencloud
+    restart: unless-stopped
+    x-runtipi:
+      is_main: true
+      internal_port: 9200
+
+x-runtipi:
+  schema_version: 2
